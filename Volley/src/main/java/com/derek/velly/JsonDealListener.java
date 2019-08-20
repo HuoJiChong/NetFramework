@@ -8,7 +8,6 @@ import com.derek.velly.Interface.IDataListener;
 import com.derek.velly.Interface.IHttpListener;
 
 import org.apache.http.HttpEntity;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,9 +30,9 @@ public class JsonDealListener<M> implements IHttpListener {
     public void onSuccess(HttpEntity httpEntry) {
         InputStream is = null;
         try {
-             is = httpEntry.getContent();
-             String content = getContent(is);
-             final M m = JSON.parseObject(content,response);
+            is = httpEntry.getContent();
+            String content = getContent(is);
+            final M m = JSON.parseObject(content, response);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -46,7 +45,7 @@ public class JsonDealListener<M> implements IHttpListener {
     }
 
     private String getContent(InputStream inputStream) {
-        String content=null;
+        String content = null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder sb = new StringBuilder();
@@ -75,6 +74,6 @@ public class JsonDealListener<M> implements IHttpListener {
 
     @Override
     public void onFail() {
-
+        dataListener.onFail();
     }
 }
