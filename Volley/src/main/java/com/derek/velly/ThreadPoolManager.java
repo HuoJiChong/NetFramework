@@ -10,6 +10,9 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * j枚举单例模式是最安全的单例模式
+ */
 public class ThreadPoolManager {
 
     private static final String TAG = ThreadPoolManager.class.getName();
