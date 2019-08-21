@@ -16,6 +16,7 @@ public class Velly {
         IHttpListener httpListener = new JsonDealListener<>(response,dataListener);
         requestHodler.setHttpListener(httpListener);
         requestHodler.setHttpService(httpService);
+        requestHodler.setResponseInfo(requestInfo);
 
         HttpTask<T> task = new HttpTask<T>(requestHodler);
 

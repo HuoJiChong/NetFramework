@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadPoolManager {
 
-    private static final String TAG = ThreadPoolExecutor.class.getName();
+    private static final String TAG = ThreadPoolManager.class.getName();
     private static ThreadPoolManager instance = new ThreadPoolManager();
 
     private LinkedBlockingQueue<Future<?>> taskQuene = new LinkedBlockingQueue<>();
@@ -34,12 +34,14 @@ public class ThreadPoolManager {
                 FutureTask task = null;
 
                 try {
+                    Log.i(TAG,"等待队列     "+taskQuene.size());
                     task = (FutureTask) taskQuene.take();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
                 if (task != null ){
+
                     threadPoolExecutor.execute(task);
                 }
 

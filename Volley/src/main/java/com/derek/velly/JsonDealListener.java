@@ -2,6 +2,7 @@ package com.derek.velly;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.derek.velly.Interface.IDataListener;
@@ -15,7 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class JsonDealListener<M> implements IHttpListener {
-
+    private static final String TAG = JsonDealListener.class.getName();
     private Class<M> response;
     private IDataListener<M> dataListener;
 

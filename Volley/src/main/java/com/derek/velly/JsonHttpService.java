@@ -1,5 +1,7 @@
 package com.derek.velly;
 
+import android.util.Log;
+
 import com.derek.velly.Interface.IHttpListener;
 import com.derek.velly.Interface.IHttpService;
 
@@ -9,19 +11,20 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 
 public class JsonHttpService implements IHttpService {
 
     private HttpPost httpPost;
-    private HttpClient httpClient;
+    private HttpClient httpClient = new DefaultHttpClient();
     private String Url;
     private byte[] requestData;
 
     private IHttpListener httpListener;
 
-    private JsonHttpResponseHandle responseHandle = new JsonHttpResponseHandle();
+    private HttpRespnceHandler responseHandler = new HttpRespnceHandler();
 
     @Override
     public void setUrl(String url) {
@@ -40,7 +43,7 @@ public class JsonHttpService implements IHttpService {
         httpPost.setEntity(byteArrayEntity);
 
         try {
-            httpClient.execute(httpPost,responseHandle);
+            httpClient.execute(httpPost,responseHandler);
         } catch (IOException e) {
             httpListener.onFail();
             e.printStackTrace();
@@ -53,9 +56,9 @@ public class JsonHttpService implements IHttpService {
         this.requestData = requestData;
     }
 
-    private class JsonHttpResponseHandle extends BasicResponseHandler{
+    private class HttpRespnceHandler extends BasicResponseHandler{
         @Override
-        public String handleResponse(HttpResponse response) throws HttpResponseException, IOException {
+        public String handleResponse(HttpResponse response) {
             int returnCode = response.getStatusLine().getStatusCode();
             if (returnCode == 200 ){
                 httpListener.onSuccess(response.getEntity());
