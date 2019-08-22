@@ -14,8 +14,7 @@ public enum DownloadStatus {
     failed(5);
 
     private int value;
-    DownloadStatus(int value)
-    {
+    DownloadStatus(int value) {
         this.value=value;
     }
 

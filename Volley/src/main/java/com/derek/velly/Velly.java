@@ -18,10 +18,10 @@ public class Velly {
         requestHodler.setHttpService(httpService);
         requestHodler.setResponseInfo(requestInfo);
 
-        HttpTask<T> task = new HttpTask<T>(requestHodler);
+        HttpTask<T> task = new HttpTask<>(requestHodler);
 
         try {
-            ThreadPoolManager.getInstance().execute(new FutureTask<Object>(task,null));
+            ThreadPoolManager.getInstance().execute(new FutureTask<>(task,null));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

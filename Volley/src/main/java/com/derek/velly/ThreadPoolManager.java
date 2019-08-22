@@ -11,13 +11,17 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * j枚举单例模式是最安全的单例模式
+ * 枚举单例模式是最安全的单例模式
+ *
+ * 请求池
+ *
  */
 public class ThreadPoolManager {
 
     private static final String TAG = ThreadPoolManager.class.getName();
     private static ThreadPoolManager instance = new ThreadPoolManager();
 
+    //任务队列
     private LinkedBlockingQueue<Future<?>> taskQuene = new LinkedBlockingQueue<>();
     private ThreadPoolExecutor threadPoolExecutor;
 
@@ -44,8 +48,10 @@ public class ThreadPoolManager {
                 }
 
                 if (task != null ){
-
+                    Log.i(TAG,"任务执行    ");
                     threadPoolExecutor.execute(task);
+                }else{
+
                 }
 
                 Log.i(TAG,"线程池大小      "+threadPoolExecutor.getPoolSize());
@@ -70,4 +76,5 @@ public class ThreadPoolManager {
             }
         }
     };
+
 }

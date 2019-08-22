@@ -1,19 +1,17 @@
 package com.derek.velly;
 
-import android.util.Log;
-
 import com.derek.velly.Interface.IHttpListener;
 import com.derek.velly.Interface.IHttpService;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class JsonHttpService implements IHttpService {
 
@@ -54,6 +52,26 @@ public class JsonHttpService implements IHttpService {
     @Override
     public void setRequestData(byte[] requestData) {
         this.requestData = requestData;
+    }
+
+    @Override
+    public Map<String, String> getHttpHeadMap() {
+        return null;
+    }
+
+    @Override
+    public boolean cancle() {
+        return false;
+    }
+
+    @Override
+    public boolean isCancle() {
+        return false;
+    }
+
+    @Override
+    public boolean isPause() {
+        return false;
     }
 
     private class HttpRespnceHandler extends BasicResponseHandler{

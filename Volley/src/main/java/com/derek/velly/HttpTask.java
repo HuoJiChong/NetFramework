@@ -1,10 +1,15 @@
 package com.derek.velly;
 
 import com.alibaba.fastjson.JSON;
+import com.derek.velly.Interface.IHttpListener;
 import com.derek.velly.Interface.IHttpService;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * 请求对象
+ * @param <T>
+ */
 public class HttpTask<T> implements Runnable {
 
     private IHttpService httpService;
@@ -12,10 +17,16 @@ public class HttpTask<T> implements Runnable {
         httpService = requestHodler.getHttpService();
         httpService.setHttpListener(requestHodler.getHttpListener());
         httpService.setUrl(requestHodler.getUrl());
-        T request = requestHodler.getResponseInfo();
-        String info = JSON.toJSONString(request);
+        IHttpListener httpListener = requestHodler.getHttpListener();
+        httpListener.addHttpHeader(httpService.getHttpHeadMap());
+
         try {
-            httpService.setRequestData(info.getBytes("UTF-8"));
+            T request = requestHodler.getResponseInfo();
+            if (request != null){
+                String info = JSON.toJSONString(request);
+                httpService.setRequestData(info.getBytes("UTF-8"));
+            }
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

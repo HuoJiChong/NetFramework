@@ -2,7 +2,6 @@ package com.derek.velly;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.derek.velly.Interface.IDataListener;
@@ -14,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 public class JsonDealListener<M> implements IHttpListener {
     private static final String TAG = JsonDealListener.class.getName();
@@ -28,10 +28,10 @@ public class JsonDealListener<M> implements IHttpListener {
     }
 
     @Override
-    public void onSuccess(HttpEntity httpEntry) {
+    public void onSuccess(HttpEntity httpEntity) {
         InputStream is = null;
         try {
-            is = httpEntry.getContent();
+            is = httpEntity.getContent();
             String content = getContent(is);
             final M m = JSON.parseObject(content, response);
             handler.post(new Runnable() {
@@ -76,5 +76,10 @@ public class JsonDealListener<M> implements IHttpListener {
     @Override
     public void onFail() {
         dataListener.onFail();
+    }
+
+    @Override
+    public void addHttpHeader(Map<String, String> headerMap) {
+
     }
 }
