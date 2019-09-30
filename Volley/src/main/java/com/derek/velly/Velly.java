@@ -8,7 +8,7 @@ import java.util.concurrent.FutureTask;
 
 public class Velly {
 
-    public static<T,M> void sendRequest(T requestInfo , String url, Class<M> response, IDataListener dataListener){
+    public static<T,M> void sendRequest(T requestInfo , String url, Class<M> response, IDataListener<M> dataListener){
         RequestHodler<T> requestHodler = new RequestHodler<>();
         requestHodler.setUrl(url);
 

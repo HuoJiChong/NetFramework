@@ -20,7 +20,7 @@ public class JsonDealListener<M> implements IHttpListener {
     private Class<M> response;
     private IDataListener<M> dataListener;
 
-    Handler handler = new Handler(Looper.getMainLooper());
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public JsonDealListener(Class<M> response, IDataListener<M> dataListener) {
         this.response = response;

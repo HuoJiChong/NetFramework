@@ -34,7 +34,7 @@ public class ThreadPoolManager {
         threadPoolExecutor.execute(runnable);
     }
 
-    private Runnable runnable = new Runnable() {
+    private  Runnable runnable = new Runnable() {
         @Override
         public void run() {
             while (true){
@@ -50,11 +50,9 @@ public class ThreadPoolManager {
                 if (task != null ){
                     Log.i(TAG,"任务执行    ");
                     threadPoolExecutor.execute(task);
-                }else{
-
                 }
 
-                Log.i(TAG,"线程池大小      "+threadPoolExecutor.getPoolSize());
+                Log.i(TAG,"线程池大小      " + threadPoolExecutor.getPoolSize() );
             }
         }
     };

@@ -64,8 +64,8 @@ public class DownFileManager implements IDownloadServiceCallable {
 
     @Override
     public void onCurrentSizeChanged(DownloadItemInfo downloadItemInfo, double downLenth, long speed) {
-        Log.e(TAG,"onCurrentSizeChanged " + downloadItemInfo.getCurrentLength() );
-        Log.e(TAG,"onCurrentSizeChanged " + downLenth );
+        Log.e(TAG,"onCurrentSizeChanged currentLength " + downloadItemInfo.getCurrentLength() );
+        Log.e(TAG,"onCurrentSizeChanged downLength" + downLenth );
         Log.e(TAG,"onCurrentSizeChanged " + speed );
     }
 
