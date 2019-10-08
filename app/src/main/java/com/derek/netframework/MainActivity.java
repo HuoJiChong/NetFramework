@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.derek.db.DaoFactory;
+import com.derek.velly.db.DaoFactory;
 import com.derek.netframework.db.User;
 import com.derek.netframework.db.UserDao;
 import com.derek.netframework.http.LoginResponse;

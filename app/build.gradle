@@ -25,5 +25,4 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
 
     implementation project(':Volley')
-    implementation project(':db')
 }

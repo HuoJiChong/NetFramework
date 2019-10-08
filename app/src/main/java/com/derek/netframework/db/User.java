@@ -1,7 +1,7 @@
 package com.derek.netframework.db;
 
-import com.derek.db.annotation.DbFiled;
-import com.derek.db.annotation.DbTable;
+import com.derek.velly.db.annotation.DbFiled;
+import com.derek.velly.db.annotation.DbTable;
 
 @DbTable("tb_user")
 public class User {

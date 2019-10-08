@@ -1,10 +1,10 @@
 package com.derek.netframework.db;
 
-import com.derek.db.BaseDao;
+import com.derek.velly.db.BaseDao;
 
 import java.util.List;
 
-public class UserDao extends BaseDao {
+public class UserDao extends BaseDao<User> {
 
     @Override
     public String createTable() {
@@ -12,7 +12,7 @@ public class UserDao extends BaseDao {
     }
 
     @Override
-    public List<UserDao> query(String sql) {
+    public List<User> query(String sql) {
 
         return null;
     }
