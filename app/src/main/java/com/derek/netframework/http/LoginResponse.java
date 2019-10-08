@@ -1,4 +1,4 @@
-package com.derek.netframework;
+package com.derek.netframework.http;
 
 public class LoginResponse {
     private int code;

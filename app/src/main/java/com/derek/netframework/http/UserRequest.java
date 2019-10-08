@@ -1,10 +1,10 @@
-package com.derek.netframework;
+package com.derek.netframework.http;
 
-public class User {
+public class UserRequest {
     public String name;
     public String pwd;
 
-    public User(String name, String pwd) {
+    public UserRequest(String name, String pwd) {
         this.name = name;
         this.pwd = pwd;
     }

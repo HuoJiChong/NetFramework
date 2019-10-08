@@ -5,14 +5,20 @@ import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.derek.db.DaoFactory;
+import com.derek.netframework.db.User;
+import com.derek.netframework.db.UserDao;
+import com.derek.netframework.http.LoginResponse;
+import com.derek.netframework.http.UserRequest;
 import com.derek.velly.Interface.IDataListener;
 import com.derek.velly.Velly;
 import com.derek.velly.download.DownFileManager;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,12 +26,20 @@ public class MainActivity extends AppCompatActivity {
     private final static String RequestURl = "http://192.168.1.106:8080/DerekWeb/Login";
     private final static String DownloadURl = "http://dl.gamdream.com/download/apk/Monument_kv-36.4_3.2.2.73.1_20171206.apk";
 
+    private static final String dbPwd = "123456";
+    private static final String dbName = "teacher.db";
+
+    UserDao userDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         requestPer();
+
+        DaoFactory.getInstance().init(getApplicationContext(),dbPwd,dbName);
+        userDao = DaoFactory.getInstance().getDataHelper(UserDao.class,User.class);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -38,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickRequest(View v){
         for (int i = 0;i<10;i++){
-            User user = new User("derek","123");
+            UserRequest user = new UserRequest("derek","123");
             Velly.sendRequest(user, RequestURl,LoginResponse.class,new IDataListener<LoginResponse>(){
 
                 @Override
