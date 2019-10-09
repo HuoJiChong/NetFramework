@@ -19,6 +19,8 @@ public interface IHttpService {
      */
     Map<String,String> getHttpHeadMap();
 
+    void pause();
+
     boolean cancle();
 
     boolean isCancle();

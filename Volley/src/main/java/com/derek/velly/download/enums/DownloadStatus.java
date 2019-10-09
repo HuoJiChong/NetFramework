@@ -1,4 +1,4 @@
-package com.derek.velly.download;
+package com.derek.velly.download.enums;
 
 public enum DownloadStatus {
     waitting(0),
@@ -13,16 +13,16 @@ public enum DownloadStatus {
 
     failed(5);
 
-    private int value;
-    DownloadStatus(int value) {
+    private Integer value;
+    DownloadStatus(Integer value) {
         this.value=value;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 }

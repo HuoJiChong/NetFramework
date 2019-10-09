@@ -60,6 +60,11 @@ public class JsonHttpService implements IHttpService {
     }
 
     @Override
+    public void pause() {
+
+    }
+
+    @Override
     public boolean cancle() {
         return false;
     }

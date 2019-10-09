@@ -18,13 +18,14 @@ import com.derek.velly.Velly;
 import com.derek.velly.download.DownFileManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
     private final static String RequestURl = "http://192.168.1.106:8080/DerekWeb/Login";
-    private final static String DownloadURl = "http://dl.gamdream.com/download/apk/Monument_kv-36.4_3.2.2.73.1_20171206.apk";
+    private final static String DownloadURl = "http://gdown.baidu.com/data/wisegame/8be18d2c0dc8a9c9/WPSOffice_177.apk";
 
     private static final String dbPwd = "123456";
     private static final String dbName = "teacher.db";
@@ -42,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
         userDao = DaoFactory.getInstance().getDataHelper(UserDao.class,User.class);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private void requestPer() {
         String[] persm = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (checkSelfPermission(persm[0]) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(persm,200);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(persm[0]) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(persm,200);
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FileDownHttpService implements IHttpService {
 
@@ -34,6 +35,8 @@ public class FileDownHttpService implements IHttpService {
     private HttpGet httpGet;
 
     private DownloadResponseHandler responseHandler = new DownloadResponseHandler();
+
+    private AtomicBoolean pause = new AtomicBoolean(false);
 
     @Override
     public void setUrl(String url) {
@@ -77,6 +80,11 @@ public class FileDownHttpService implements IHttpService {
     }
 
     @Override
+    public void pause() {
+        pause.compareAndSet(false,true);
+    }
+
+    @Override
     public boolean cancle() {
         return false;
     }
@@ -88,7 +96,7 @@ public class FileDownHttpService implements IHttpService {
 
     @Override
     public boolean isPause() {
-        return false;
+        return pause.get();
     }
 
     private class DownloadResponseHandler extends BasicResponseHandler{

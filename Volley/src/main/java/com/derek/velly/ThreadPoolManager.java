@@ -57,6 +57,22 @@ public class ThreadPoolManager {
         }
     };
 
+    public <T> boolean removeTask(FutureTask futureTask)
+    {
+        boolean result=false;
+        /**
+         * 阻塞式队列是否含有线程
+         */
+        if(taskQuene.contains(futureTask))
+        {
+            taskQuene.remove(futureTask);
+        }else
+        {
+            result=threadPoolExecutor.remove(futureTask);
+        }
+        return  result;
+    }
+
     public <T> void execute(FutureTask<T> task) throws InterruptedException {
         taskQuene.put(task);
     }

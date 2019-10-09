@@ -92,6 +92,14 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
         }
     }
 
+    /**
+     * 添加下载记录
+     * @param url 下载地址
+     * @param filePath 下载文件路径
+     * @param displayName 文件显示名
+     * @param priority 下载优先级
+     * @return 下载ID，失败时返回-1，成功时返回正数
+     */
     public Integer addRecord(String url,String filePath,String displayName,int priority){
         synchronized (DownLoadDao.class){
             DownloadItemInfo exitDownloadInfo = findRecord(url,filePath);
@@ -105,7 +113,7 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
                 record.setStatus(DownloadStatus.waitting.getValue());
                 record.setTotalLen(0L);
                 record.setCurrentLen(0L);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 record.setStartTime(dateFormat.format(new Date()) );
                 record.setFinishTime("0");
                 super.insert(record);
@@ -135,6 +143,97 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
             }
         }
         return maxId + 1;
+    }
+
+    /**
+     * 更新下载记录
+     * @param record 记录
+     * @return 更新结果
+     */
+    public int updateRecord(DownloadItemInfo record) {
+        DownloadItemInfo where = new DownloadItemInfo();
+        where.setId(record.getId());
+        int result = 0;
+        synchronized (DownLoadDao.class){
+            try{
+                // 更新数据库中的数据
+                result = super.update(record,where);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            if (result > 0){
+                // 更新内存中的数据
+                for (int i = 0;i<downloadItemInfos.size();i++){
+                    if (downloadItemInfos.get(i).getId().intValue() == record.getId()){
+                        downloadItemInfos.set(i,record);
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param downId 下载ID
+     * @return 移除结果
+     */
+    public boolean removeRecordFromMemery(int downId) {
+        synchronized (DownLoadDao.class){
+            boolean result = false;
+            for (int i = 0;i<downloadItemInfos.size();i++){
+                if (downloadItemInfos.get(i).getId() == downId){
+                    downloadItemInfos.remove(i);
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
+        }
+    }
+
+    /**
+     *  查找下载记录
+     * @param filePath
+     * @return
+     */
+    public DownloadItemInfo findSigleRecord(String filePath) {
+        List<DownloadItemInfo> downloadInfoList = findRecord(filePath);
+        if (downloadInfoList.isEmpty()){
+            return null;
+        }
+        return downloadInfoList.get(0);
+    }
+
+    /**
+     * 根据id查找下载记录对象
+     *
+     * @param recordId
+     * @return
+     */
+    public DownloadItemInfo findRecordById(int recordId)
+    {
+        synchronized (DownLoadDao.class)
+        {
+            for (DownloadItemInfo record :downloadItemInfos)
+            {
+                if (record.getId() == recordId)
+                {
+                    return record;
+                }
+            }
+
+            DownloadItemInfo where = new DownloadItemInfo();
+            where.setId(recordId);
+            List<DownloadItemInfo> resultList = super.query(where);
+            if (resultList.size() > 0)
+            {
+                return resultList.get(0);
+            }
+            return null;
+        }
+
     }
 
     /**

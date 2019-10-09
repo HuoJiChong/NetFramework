@@ -6,6 +6,7 @@ import android.os.Looper;
 import com.alibaba.fastjson.JSON;
 import com.derek.velly.Interface.IDataListener;
 import com.derek.velly.Interface.IHttpListener;
+import com.derek.velly.util.FileUtil;
 
 import org.apache.http.HttpEntity;
 
@@ -42,6 +43,8 @@ public class JsonDealListener<M> implements IHttpListener {
             });
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            FileUtil.closeQuietly(is);
         }
     }
 
@@ -59,11 +62,7 @@ public class JsonDealListener<M> implements IHttpListener {
                 dataListener.onFail();
                 System.out.println("Error=" + e.toString());
             } finally {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    System.out.println("Error=" + e.toString());
-                }
+               FileUtil.closeQuietly(inputStream);
             }
             return sb.toString();
         } catch (Exception e) {

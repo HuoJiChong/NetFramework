@@ -6,6 +6,7 @@ import android.os.Looper;
 import com.derek.velly.Interface.IHttpService;
 import com.derek.velly.download.Interface.IDownListener;
 import com.derek.velly.download.Interface.IDownloadServiceCallable;
+import com.derek.velly.download.enums.DownloadStatus;
 
 import org.apache.http.HttpEntity;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class DownLoadListener implements IDownListener  {
+public class DownLoadListener implements IDownListener {
 
     private DownloadItemInfo downloadItemInfo;
     private File file;
@@ -160,7 +161,7 @@ public class DownLoadListener implements IDownListener  {
      * @param totalLength 长度
      */
     private void receviceTotalLength(long totalLength) {
-        downloadItemInfo.setCurrentLength(totalLength);
+        downloadItemInfo.setCurrentLen(totalLength);
         final DownloadItemInfo itemInfo = downloadItemInfo.copy();
         if (downloadServiceCallable!=null){
             handler.post(new Runnable() {
@@ -179,7 +180,7 @@ public class DownLoadListener implements IDownListener  {
      * @param speed 下载速度
      */
     private void downloadLengthChange(final long downlength, final long totalLength, final long speed){
-        downloadItemInfo.setCurrentLength(downlength);
+        downloadItemInfo.setCurrentLen(downlength);
 
         if (downloadServiceCallable!=null){
             final DownloadItemInfo itemInfo = downloadItemInfo.copy();
@@ -197,7 +198,7 @@ public class DownLoadListener implements IDownListener  {
      * @param downloading
      */
     private void downloadStatusChange(DownloadStatus downloading) {
-        downloadItemInfo.setStatus(downloading);
+        downloadItemInfo.setStatus(downloading.getValue());
         final DownloadItemInfo copyDownloadItemInfo=downloadItemInfo.copy();
         if(downloadServiceCallable!=null)
         {
