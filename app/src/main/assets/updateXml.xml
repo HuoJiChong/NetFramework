@@ -41,7 +41,7 @@
             </sql_after>
         </updateDb>
         <updateDb name="user">
-            <sql_before>alter table tb_user rename to bak_t_user;</sql_before>
+            <sql_before>alter table tb_user rename to bak_tb_user;</sql_before>
             <sql_after>
                 insert into tb_user(name,
                 password)
@@ -49,7 +49,7 @@
                 from bak_tb_user;
             </sql_after>
             <sql_after>
-                drop table if exists bak_t_user;
+                drop table if exists bak_tb_user;
             </sql_after>
         </updateDb>
     </updateStep>

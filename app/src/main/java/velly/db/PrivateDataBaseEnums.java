@@ -31,12 +31,12 @@ public enum PrivateDataBaseEnums {
             User currentUser=userDao.getCurrentUser();
             if(currentUser!=null)
             {
-                File file=new File(Environment.getExternalStorageDirectory(),"update");
+                File file=new File(Environment.getExternalStorageDirectory(),"update/" + currentUser.getUser_Id());
                 if(!file.exists())
                 {
                     file.mkdirs();
                 }
-                return file.getAbsolutePath()+"/"+currentUser.getUser_Id()+"/logic.db";
+                return file.getAbsolutePath() + "/logic.db";
             }
         }
         return value;

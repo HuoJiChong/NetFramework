@@ -6,8 +6,8 @@ import velly.db.annotation.DbTable;
 @DbTable("tb_user")
 public class User {
 
-    @DbFiled("user_Id")
-    private String user_Id;
+    @DbFiled("user_id")
+    private String user_id;
 
     @DbFiled("name")
     private String name;
@@ -22,11 +22,11 @@ public class User {
     }
 
     public String getUser_Id() {
-        return user_Id;
+        return user_id;
     }
 
     public void setUser_Id(String user_Id) {
-        this.user_Id = user_Id;
+        this.user_id = user_Id;
     }
 
     public String getName() {
@@ -56,7 +56,7 @@ public class User {
     @Override
     public String toString() {
         return "BeanUser{" +
-                "user_Id=" + user_Id +
+                "user_Id=" + user_id +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';

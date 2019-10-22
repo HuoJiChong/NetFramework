@@ -3,6 +3,7 @@ package velly.db;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import java.util.Map;
  *  user.db，多用户表
  */
 public class DaoFactory {
+    public static final String USER_DB_NAME = "/user.db";
     private static class DaoFactoryHolder {
         private static DaoFactory instance = new DaoFactory();
     }
@@ -31,7 +33,7 @@ public class DaoFactory {
         {
             file.mkdirs();
         }
-        sqlDatabasePath = file.getAbsolutePath()+"/users.db";
+        sqlDatabasePath = file.getAbsolutePath() + USER_DB_NAME;
 
         openDatabase();
     }
@@ -52,8 +54,8 @@ public class DaoFactory {
         }
         try {
             baseDao=clazz.newInstance();
-            baseDao.init(entity,sqLiteDatabase);
-            map.put(clazz.getSimpleName(),baseDao);
+            if (baseDao.init(entity,sqLiteDatabase))
+                map.put(clazz.getSimpleName(),baseDao);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -77,5 +79,13 @@ public class DaoFactory {
         }
 
         return (T) baseDao;
+    }
+
+    public void onStop(){
+        for (BaseDao db : map.values()){
+            Log.e("derek ", db.database.getPath());
+            db.onClose();
+        }
+        map.clear();
     }
 }

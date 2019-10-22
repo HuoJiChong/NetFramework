@@ -54,6 +54,12 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
         return tableName;
     }
 
+    public void onClose(){
+        if (database.isOpen()){
+            database.close();
+        }
+    }
+
     protected synchronized boolean init(Class<T> entity, SQLiteDatabase sqLiteDatabase) {
         if(!isInit) {
             entityClass=entity;

@@ -26,7 +26,7 @@ public class UpdateDbXml {
         {
             // 获取升级脚本
             NodeList updateSteps = document.getElementsByTagName("updateStep");
-            this.updateSteps = new ArrayList<UpdateStep>();
+            this.updateSteps = new ArrayList<>();
             for (int i = 0; i < updateSteps.getLength(); i++) {
                 Element ele = (Element) (updateSteps.item(i));
                 UpdateStep step = new UpdateStep(ele);
@@ -47,11 +47,22 @@ public class UpdateDbXml {
         }
     }
 
+    /**
+     * 获取各个升级版本
+     * @return
+     */
     public List<CreateVersion> getCreateVersions() {
         return createVersions;
     }
 
+    /**
+     * 获取各个升级步骤
+     * @return
+     */
     public List<UpdateStep> getUpdateSteps() {
         return updateSteps;
     }
+
+
+
 }

@@ -21,6 +21,8 @@ public final class FileUtil {
      * @return
      */
     public static void CopySingleFile(String oldPathFile, String newPathFile) {
+        InputStream inStream = null;
+        FileOutputStream fs = null;
         try {
             int bytesum = 0;
             int byteread = 0;
@@ -32,24 +34,26 @@ public final class FileUtil {
                 parentFile.mkdirs();
             }
             if (oldfile.exists()) { //文件存在时
-                InputStream inStream = new FileInputStream(oldPathFile); //读入原文件
-                FileOutputStream fs = new FileOutputStream(newPathFile);
+                inStream = new FileInputStream(oldPathFile); //读入原文件
+                fs = new FileOutputStream(newPathFile);
                 byte[] buffer = new byte[1024];
                 while ((byteread = inStream.read(buffer)) != -1) {
                     bytesum += byteread; //字节数 文件大小
                     fs.write(buffer, 0, byteread);
                 }
-                inStream.close();
-                fs.close();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            closeQuietly(inStream);
+            closeQuietly(fs);
         }
     }
 
     /**
-     * 流关闭
-     * @param closeable 流文件
+     * 关闭流
+     * @param closeable a source or destination of data that can be closed.
      */
     public static void closeQuietly(Closeable closeable){
         if (closeable != null){

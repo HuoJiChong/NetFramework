@@ -8,12 +8,11 @@ public class UserDao extends BaseDao<User> {
 
     @Override
     public String createTable() {
-        return "create table if not exists tb_user(user_Id int,name varchar(20),password varchar(10));";
+        return "create table if not exists tb_user(user_id int,name varchar(20),password varchar(10));";
     }
 
     @Override
     public List<User> query(String sql) {
-
         return null;
     }
 

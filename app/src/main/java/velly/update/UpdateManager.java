@@ -64,16 +64,25 @@ public class UpdateManager {
         userList = userDao.query(new User());
         UpdateDbXml xml = readDbXml(context);
 
+        // 得到当前数据库版本信息
         String thisVersion = this.getVersionName(context);
+        // 得到创建数据库的脚本
         CreateVersion thisCreateVersion = analyseCreateVersion(xml, thisVersion);
 
         try {
+            // 执行创建数据库脚本
             executeCreateVersion(thisCreateVersion, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * 执行创建数据库的脚本
+     * @param createVersion 创建数据库脚本
+     * @param isLogic 是否是logic数据库，每个用户自己的数据库
+     * @throws Exception 异常
+     */
     private void executeCreateVersion(CreateVersion createVersion, boolean isLogic) throws Exception {
         if (createVersion == null || createVersion.getCreateDbs() == null) {
             throw new Exception("createVersion or createDbs is null...");
@@ -83,7 +92,8 @@ public class UpdateManager {
             if (cd == null || cd.getName() == null) {
                 throw new Exception("db or dbName is null when create version.");
             }
-            if (!"logic".equals(cd.getName())) {
+            // 只更新logic数据库
+            if (/*!"logic".equals(cd.getName())*/ isLogic) {
                 continue;
             }
             List<String> sqls = cd.getSqlCreates();
@@ -160,11 +170,9 @@ public class UpdateManager {
 
     /**
      * 创建数据库,获取数据库对应的SQLiteDatabase
-     *
-     * @param dbname
-     * @return 设定文件
-     * @throws throws [违例类型] [违例说明]sta
-     * @see
+     * @param dbname 数据库名称
+     * @param userId 用户ID
+     * @return 用户的数据库
      */
     private SQLiteDatabase getDb(String dbname, String userId) {
         String dbfilepath = null;
@@ -174,9 +182,9 @@ public class UpdateManager {
             file.mkdirs();
         }
         if (dbname.equalsIgnoreCase("logic")) {
-            dbfilepath = file.getAbsolutePath() + "/logic.db";// logic对应的数据库路径
+            dbfilepath = file.getAbsolutePath() + "/logic.db"; // logic对应的数据库路径
         } else if (dbname.equalsIgnoreCase("user")) {
-            dbfilepath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/user.db";// service对应的数据库
+            dbfilepath = parentFile.getAbsolutePath() + DaoFactory.USER_DB_NAME;// service对应的数据库
         }
 
         if (dbfilepath != null) {
@@ -273,13 +281,13 @@ public class UpdateManager {
      * @throws throws [违例类型] [违例说明]
      * @see
      */
-    public boolean saveVersionInfo(Context context, String newVersion) {
+    public boolean saveVersionInfo(Context context, String oldVersion) {
         boolean ret = false;
 
         FileWriter writer = null;
         try {
             writer = new FileWriter(new File(parentFile, "update.txt"), false);
-            writer.write("V003" + INFO_FILE_DIV + "V002");
+            writer.write(getVersionName(context) + INFO_FILE_DIV + oldVersion);
             writer.flush();
             ret = true;
         } catch (IOException e) {
@@ -298,6 +306,7 @@ public class UpdateManager {
      */
     public void startUpdateDb(Context context) {
         UpdateDbXml updateDbxml = readDbXml(context);
+        // 获取版本信息
         if (getLocalVersionInfo()) {
             //拿到当前版本
             String thisVersion = getVersionName(context);
@@ -314,14 +323,14 @@ public class UpdateManager {
             try {
                 //更新每个用户的数据库
                 for (User user : userList) {
-                    String logicDbDir = parentFile.getAbsolutePath() + "/update" + "/" + user.getUser_Id() + "/logic.db";
+                    String logicDbDir = parentFile.getAbsolutePath() + "/" + user.getUser_Id() + "/logic.db";
 
                     String logicCopy = bakFile.getAbsolutePath() + "/" + user.getUser_Id() + "/logic.db";
                     FileUtil.CopySingleFile(logicDbDir, logicCopy);
                 }
                 //备份总数据库
-                String user = parentFile.getAbsolutePath() + "/user.db";
-                String user_bak = bakFile.getAbsolutePath() + "/user.db";
+                String user = parentFile.getAbsolutePath() + DaoFactory.USER_DB_NAME;
+                String user_bak = bakFile.getAbsolutePath() + DaoFactory.USER_DB_NAME;
                 FileUtil.CopySingleFile(user, user_bak);
                 // 第二步:执行sql_before语句，删除以及备份相关旧表
                 executeDb(updateDbs, -1);
@@ -329,26 +338,26 @@ public class UpdateManager {
                 // 第三步:检查新表，创建新表
                 executeCreateVersion(createVersion, false);
 
-
                 Log.i(TAG, "第三步检查新表完成!");
                 // 第四步:从备份表中恢复数据，恢复后删除备份表
                 executeDb(updateDbs, 1);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
-            // 第五步:升级成功，删除备份数据库
+            // 第五步:升级成功，删除备份数据库 每个用户的单独
             if (userList != null && !userList.isEmpty()) {
                 for (User user : userList) {
-                    String logicDbDir = parentFile.getAbsolutePath() + "/update" + "/" + user.getUser_Id() + ".db";
+                    String logicDbDir = bakFile.getAbsolutePath() + "/" + user.getUser_Id() + "/logic.db";
                     File file = new File(logicDbDir);
                     if (file.exists()) {
-//                        file.delete();
+                        file.delete();
                     }
                 }
             }
-            File userFileBak = new File(bakFile.getAbsolutePath() + "user_bak.db");
+            // 删除总数据
+            File userFileBak = new File(bakFile.getAbsolutePath() + DaoFactory.USER_DB_NAME);
             if (userFileBak.exists()) {
-//                userFileBak.delete();
+                userFileBak.delete();
             }
 
             Log.i(TAG, "升级成功");
