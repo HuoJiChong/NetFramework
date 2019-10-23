@@ -30,7 +30,7 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
     /**
      * 保证实例化一次
      */
-    private boolean isInit=false;
+    private boolean isInit = false;
     /**
      * 持有操作数据库表所对应的java类型
      * User
@@ -42,11 +42,11 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
      * value --》Field
      * class  methoFiled
      * {
-     *     Method  setMthod
-     *     Filed  fild
+     * Method  setMthod
+     * Filed  fild
      * }
      */
-    private HashMap<String,Field> cacheMap;
+    private HashMap<String, Field> cacheMap;
 
     private String tableName;
 
@@ -54,43 +54,43 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
         return tableName;
     }
 
-    public void onClose(){
-        if (database.isOpen()){
+    public void onClose() {
+        if (database.isOpen()) {
             database.close();
         }
     }
 
     protected synchronized boolean init(Class<T> entity, SQLiteDatabase sqLiteDatabase) {
-        if(!isInit) {
-            entityClass=entity;
-            database=sqLiteDatabase;
+        if (!isInit) {
+            entityClass = entity;
+            database = sqLiteDatabase;
 
             DbTable dbTable = entity.getAnnotation(DbTable.class);
-            if (dbTable==null) {
-                tableName=entity.getClass().getSimpleName();
-            }else {
-                tableName=dbTable.value();
+            if (dbTable == null) {
+                tableName = entity.getClass().getSimpleName();
+            } else {
+                tableName = dbTable.value();
             }
-            if(!database.isOpen()) {
-                return  false;
+            if (!database.isOpen()) {
+                return false;
             }
-            if(!TextUtils.isEmpty(createTable())) {
+            if (!TextUtils.isEmpty(createTable())) {
                 database.execSQL(createTable());
             }
-            cacheMap=new HashMap<>();
+            cacheMap = new HashMap<>();
             initCacheMap();
 
-            isInit=true;
+            isInit = true;
         }
-        return  isInit;
+        return isInit;
     }
 
-    private void initCacheMap(){
+    private void initCacheMap() {
         /**
          * 第一条数据，查0个数据
          */
         String sql = "select * from " + this.tableName + " limit 1,0";
-        Cursor cursor =null ;
+        Cursor cursor = null;
 
         try {
             cursor = database.rawQuery(sql, null);
@@ -125,9 +125,9 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
                     cacheMap.put(colmunName, columnFiled);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             FileUtil.closeQuietly(cursor);
         }
 
@@ -135,9 +135,10 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
 
     @Override
     public Long insert(T entity) {
-        Map<String,String> map = getValues(entity);
+        Map<String, String> map = getValues(entity);
         ContentValues values = getContentValues(map);
-        long result = database.insert(this.tableName,null,values);
+
+        long result = database.insert(this.tableName, null, values);
         return result;
     }
 
@@ -148,77 +149,77 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
 
         DaoCondition condition = new DaoCondition(getValues(where));
 
-        int result = database.update(this.tableName,entityValues,condition.getWhereClause(),condition.getWhereArgs());
+        int result = database.update(this.tableName, entityValues, condition.getWhereClause(), condition.getWhereArgs());
         return result;
     }
 
     @Override
     public int delete(T where) {
-        Map<String,String> map = getValues(where);
+        Map<String, String> map = getValues(where);
         DaoCondition condition = new DaoCondition(map);
-        int result = database.delete(this.tableName,condition.getWhereClause(),condition.getWhereArgs());
+        int result = database.delete(this.tableName, condition.getWhereClause(), condition.getWhereArgs());
         return result;
     }
 
     @Override
     public List<T> query(T where) {
-        return query(where,null,null,null);
+        return query(where, null, null, null);
     }
 
     @Override
     public List<T> query(T where, String orderBy, Integer startIndex, Integer limit) {
-        Map<String,String> map=getValues(where);
+        Map<String, String> map = getValues(where);
 
         String limitString = null;
-        if(startIndex!=null&&limit!=null) {
-            limitString=startIndex+" , "+limit;
+        if (startIndex != null && limit != null) {
+            limitString = startIndex + " , " + limit;
         }
 
-        DaoCondition condition=new DaoCondition(map);
-        Log.e("derek",condition.getWhereClause());
+        DaoCondition condition = new DaoCondition(map);
+        Log.e("derek", condition.getWhereClause());
 //        Log.e("derek",condition.getWhereArgs());
-        Cursor cursor=database.query(tableName,null,condition.getWhereClause()
-                ,condition.getWhereArgs(),null,null,orderBy,limitString);
-        List<T> result=getResult(cursor,where);
+        Cursor cursor = database.query(tableName, null, condition.getWhereClause()
+                , condition.getWhereArgs(), null, null, orderBy, limitString);
+        List<T> result = getResult(cursor, where);
         cursor.close();
         return result;
     }
 
     /**
      * 将成员变量转换成
-     *  -->> 表的列名，成员变量的值
+     * -->> 表的列名，成员变量的值
+     *
      * @param entity 成员变量
      * @return
      */
-    private Map<String,String> getValues(T entity){
-        HashMap<String,String> result=new HashMap<>();
-        Iterator<Field> filedsIterator=cacheMap.values().iterator();
+    private Map<String, String> getValues(T entity) {
+        HashMap<String, String> result = new HashMap<>();
+        Iterator<Field> filedsIterator = cacheMap.values().iterator();
         /**
          * 循环遍历 映射map的  Filed
          */
-        while (filedsIterator.hasNext())
-        {
-            Field colmunToFiled=filedsIterator.next();
+        while (filedsIterator.hasNext()) {
+            Field colmunToFiled = filedsIterator.next();
             String cacheKey;
-            String cacheValue=null;
-            if(colmunToFiled.getAnnotation(DbFiled.class)!=null) {
-                cacheKey=colmunToFiled.getAnnotation(DbFiled.class).value();
-            }else {
-                cacheKey=colmunToFiled.getName();
+            String cacheValue = null;
+            if (colmunToFiled.getAnnotation(DbFiled.class) != null) {
+                cacheKey = colmunToFiled.getAnnotation(DbFiled.class).value();
+            } else {
+                cacheKey = colmunToFiled.getName();
             }
             try {
                 /**
                  * 如果没有赋值，就过滤；
                  */
                 Object value = colmunToFiled.get(entity);
-                if( null == value ) {
+                if (null == value) {
                     continue;
                 }
-                cacheValue=colmunToFiled.get(entity).toString();
+                cacheValue = colmunToFiled.get(entity).toString();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            result.put(cacheKey,cacheValue);
+            result.put(cacheKey, cacheValue);
         }
 
         return result;
@@ -226,19 +227,20 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
 
     /**
      * 将map转换成 ContentValues
+     *
      * @param map map
      * @return
      */
-    private ContentValues getContentValues(Map<String,String> map){
+    private ContentValues getContentValues(Map<String, String> map) {
         ContentValues contentValues = new ContentValues();
         Set keys = map.keySet();
         Iterator iterator = keys.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             String key = (String) iterator.next();
             String value = map.get(key);
 
-            if (value != null){
-                contentValues.put(key,value);
+            if (value != null) {
+                contentValues.put(key, value);
             }
         }
         return contentValues;
@@ -248,46 +250,44 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
         ArrayList list = new ArrayList();
 
         Object item;
-        while (cursor.moveToNext())
-        {
+        while (cursor.moveToNext()) {
             try {
-                item=where.getClass().newInstance();
+                item = where.getClass().newInstance();
                 /**
                  * 列名  name
                  * 成员变量名  Filed;
                  */
-                Iterator iterator=cacheMap.entrySet().iterator();
-                while (iterator.hasNext())
-                {
-                    Map.Entry entry= (Map.Entry) iterator.next();
+                Iterator iterator = cacheMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iterator.next();
                     /**
                      * 得到列名
                      */
-                    String colomunName= (String) entry.getKey();
+                    String colomunName = (String) entry.getKey();
                     /**
                      * 然后以列名拿到  列名在游标的位子
                      */
-                    Integer colmunIndex=cursor.getColumnIndex(colomunName);
+                    Integer colmunIndex = cursor.getColumnIndex(colomunName);
 
-                    Field field= (Field) entry.getValue();
+                    Field field = (Field) entry.getValue();
 
-                    Class type=field.getType();
-                    if(colmunIndex!=-1) {
-                        if(type==String.class) {
+                    Class type = field.getType();
+                    if (colmunIndex != -1) {
+                        if (type == String.class) {
                             //反射方式赋值
-                            field.set(item,cursor.getString(colmunIndex));
-                        }else if(type==Double.class) {
-                            field.set(item,cursor.getDouble(colmunIndex));
-                        }else  if(type==Integer.class) {
-                            field.set(item,cursor.getInt(colmunIndex));
-                        }else if(type==Long.class) {
-                            field.set(item,cursor.getLong(colmunIndex));
-                        }else  if(type==byte[].class) {
-                            field.set(item,cursor.getBlob(colmunIndex));
+                            field.set(item, cursor.getString(colmunIndex));
+                        } else if (type == Double.class) {
+                            field.set(item, cursor.getDouble(colmunIndex));
+                        } else if (type == Integer.class) {
+                            field.set(item, cursor.getInt(colmunIndex));
+                        } else if (type == Long.class) {
+                            field.set(item, cursor.getLong(colmunIndex));
+                        } else if (type == byte[].class) {
+                            field.set(item, cursor.getBlob(colmunIndex));
                             /*
                              * 不支持的类型
                              */
-                        }else {
+                        } else {
                             continue;
                         }
                     }
@@ -305,36 +305,33 @@ public abstract class BaseDao<T> implements IBaseDao<T> {
 
     /**
      * 封装修改语句
-     *
      */
-    class DaoCondition
-    {
+    class DaoCondition {
         /**
          * 查询条件
          * name=? && password =?
          */
         private String whereClause;
 
-        private  String[] whereArgs;
-        public DaoCondition(Map<String ,String> whereClause) {
-            ArrayList list=new ArrayList();
-            StringBuilder stringBuilder=new StringBuilder();
+        private String[] whereArgs;
+
+        public DaoCondition(Map<String, String> whereClause) {
+            ArrayList list = new ArrayList();
+            StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.append(" 1=1 ");
-            Set keys=whereClause.keySet();
-            Iterator iterator=keys.iterator();
-            while (iterator.hasNext())
-            {
-                String key= (String) iterator.next();
-                String value=whereClause.get(key);
+            Set keys = whereClause.keySet();
+            Iterator iterator = keys.iterator();
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                String value = whereClause.get(key);
 
-                if (value!=null)
-                {
+                if (value != null) {
                     /*
                     拼接条件查询语句
                     1=1 and name =? and password=?
                      */
-                    stringBuilder.append(" and "+key+" =?");
+                    stringBuilder.append(" and " + key + " =?");
                     /**
                      * ？----》value
                      */

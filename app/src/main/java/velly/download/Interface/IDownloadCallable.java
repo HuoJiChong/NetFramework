@@ -9,19 +9,22 @@ import velly.download.enums.DownloadStatus;
  */
 public interface IDownloadCallable {
     /**
-     *  新增下载任务的监听
+     * 新增下载任务的监听
+     *
      * @param downloadId
      */
     void onDownloadInfoAdd(int downloadId);
 
     /**
      * 删除下载任务的监听
+     *
      * @param downloadId
      */
     void onDownloadInfoRemove(int downloadId);
 
     /**
      * 下载状态变化
+     *
      * @param downloadId
      * @param status
      */
@@ -29,6 +32,7 @@ public interface IDownloadCallable {
 
     /**
      * 下载文件总长度
+     *
      * @param downloadId
      * @param totalLength
      */
@@ -36,6 +40,7 @@ public interface IDownloadCallable {
 
     /**
      * 下载速度
+     *
      * @param downloadId
      * @param downloadPercent
      * @param speed
@@ -44,12 +49,14 @@ public interface IDownloadCallable {
 
     /**
      * 下载成功
+     *
      * @param downloadId
      */
     void onDownloadSuccess(int downloadId);
 
     /**
-     *  下载错误
+     * 下载错误
+     *
      * @param downloadId
      * @param errorCode
      * @param errorMsg

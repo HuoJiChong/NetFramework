@@ -16,6 +16,7 @@ public final class FileUtil {
 
     /**
      * 复制单个文件(可更名复制)
+     *
      * @param oldPathFile 准备复制的文件源
      * @param newPathFile 拷贝到新绝对路径带文件名(注：目录路径需带文件名)
      * @return
@@ -27,10 +28,9 @@ public final class FileUtil {
             int bytesum = 0;
             int byteread = 0;
             File oldfile = new File(oldPathFile);
-            File newFile=new File(newPathFile);
-            File parentFile=newFile.getParentFile();
-            if(!parentFile.exists())
-            {
+            File newFile = new File(newPathFile);
+            File parentFile = newFile.getParentFile();
+            if (!parentFile.exists()) {
                 parentFile.mkdirs();
             }
             if (oldfile.exists()) { //文件存在时
@@ -45,7 +45,7 @@ public final class FileUtil {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             closeQuietly(inStream);
             closeQuietly(fs);
         }
@@ -53,10 +53,11 @@ public final class FileUtil {
 
     /**
      * 关闭流
+     *
      * @param closeable a source or destination of data that can be closed.
      */
-    public static void closeQuietly(Closeable closeable){
-        if (closeable != null){
+    public static void closeQuietly(Closeable closeable) {
+        if (closeable != null) {
             try {
                 closeable.close();
             } catch (IOException e) {

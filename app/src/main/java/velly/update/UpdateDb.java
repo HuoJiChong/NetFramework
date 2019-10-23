@@ -27,8 +27,7 @@ public class UpdateDb {
      */
     private List<String> sqlAfters;
 
-    public UpdateDb(Element ele)
-    {
+    public UpdateDb(Element ele) {
         dbName = ele.getAttribute("name");
         sqlBefores = new ArrayList<>();
         sqlAfters = new ArrayList<>();

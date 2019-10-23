@@ -79,8 +79,9 @@ public class UpdateManager {
 
     /**
      * 执行创建数据库的脚本
+     *
      * @param createVersion 创建数据库脚本
-     * @param isLogic 是否是logic数据库，每个用户自己的数据库
+     * @param isLogic       是否是logic数据库，每个用户自己的数据库
      * @throws Exception 异常
      */
     private void executeCreateVersion(CreateVersion createVersion, boolean isLogic) throws Exception {
@@ -170,6 +171,7 @@ public class UpdateManager {
 
     /**
      * 创建数据库,获取数据库对应的SQLiteDatabase
+     *
      * @param dbname 数据库名称
      * @param userId 用户ID
      * @return 用户的数据库

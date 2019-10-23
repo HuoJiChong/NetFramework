@@ -7,7 +7,7 @@ import velly.db.annotation.DbTable;
 @DbTable("t_downloadInfo")
 public class DownloadItemInfo extends BaseEntity<DownloadItemInfo> {
 
-//    private long currentLength;
+    //    private long currentLength;
 //    private long totalLength;
     public transient HttpTask httpTask;
 
@@ -40,7 +40,7 @@ public class DownloadItemInfo extends BaseEntity<DownloadItemInfo> {
     public DownloadItemInfo() {
     }
 
-    public DownloadItemInfo( String url,String filePath) {
+    public DownloadItemInfo(String url, String filePath) {
         this.filePath = filePath;
         this.url = url;
     }

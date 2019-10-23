@@ -12,9 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 枚举单例模式是最安全的单例模式
- *
+ * <p>
  * 请求池
- *
  */
 public class ThreadPoolManager {
 
@@ -25,52 +24,49 @@ public class ThreadPoolManager {
     private LinkedBlockingQueue<Future<?>> taskQuene = new LinkedBlockingQueue<>();
     private ThreadPoolExecutor threadPoolExecutor;
 
-    public static ThreadPoolManager getInstance(){
+    public static ThreadPoolManager getInstance() {
         return instance;
     }
 
-    private ThreadPoolManager(){
-        threadPoolExecutor = new ThreadPoolExecutor(4,10,10,TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(4),handler);
+    private ThreadPoolManager() {
+        threadPoolExecutor = new ThreadPoolExecutor(4, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(4), handler);
         threadPoolExecutor.execute(runnable);
     }
 
-    private  Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            while (true){
+            while (true) {
                 FutureTask task = null;
 
                 try {
-                    Log.i(TAG,"等待队列     "+taskQuene.size());
+                    Log.i(TAG, "等待队列     " + taskQuene.size());
                     task = (FutureTask) taskQuene.take();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                if (task != null ){
-                    Log.i(TAG,"任务执行    ");
+                if (task != null) {
+                    Log.i(TAG, "任务执行    ");
                     threadPoolExecutor.execute(task);
                 }
 
-                Log.i(TAG,"线程池大小      " + threadPoolExecutor.getPoolSize() );
+                Log.i(TAG, "线程池大小      " + threadPoolExecutor.getPoolSize());
             }
         }
     };
 
-    public <T> boolean removeTask(FutureTask futureTask)
-    {
-        boolean result=false;
+    public <T> boolean removeTask(FutureTask futureTask) {
+        boolean result = false;
         /**
          * 阻塞式队列是否含有线程
          */
-        if(taskQuene.contains(futureTask))
-        {
+        if (taskQuene.contains(futureTask)) {
             taskQuene.remove(futureTask);
-        }else
-        {
-            result=threadPoolExecutor.remove(futureTask);
+        } else {
+            result = threadPoolExecutor.remove(futureTask);
         }
-        return  result;
+        return result;
     }
 
     public <T> void execute(FutureTask<T> task) throws InterruptedException {
@@ -84,7 +80,8 @@ public class ThreadPoolManager {
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
             try {
-                taskQuene.put(new FutureTask<Object>(r,null) {});
+                taskQuene.put(new FutureTask<Object>(r, null) {
+                });
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -24,9 +24,9 @@ public enum Priority {
         this.value = value;
     }
 
-    public static Priority getInstance(int value){
-        for (Priority priority : Priority.values()){
-            if (priority.getValue() == value){
+    public static Priority getInstance(int value) {
+        for (Priority priority : Priority.values()) {
+            if (priority.getValue() == value) {
                 return priority;
             }
         }

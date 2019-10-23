@@ -12,12 +12,12 @@ public interface IHttpService {
     void setRequestData(byte[] requestData);
 
     /**
-     *
      * 以下的方法是 额外添加的
      * 获取请求头的map
+     *
      * @return
      */
-    Map<String,String> getHttpHeadMap();
+    Map<String, String> getHttpHeadMap();
 
     void pause();
 

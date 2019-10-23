@@ -11,6 +11,7 @@ public interface IHttpListener {
 
     /**
      * 请求成功的回调
+     *
      * @param httpEntity 返回的信息实体
      */
     void onSuccess(HttpEntity httpEntity);
@@ -22,6 +23,7 @@ public interface IHttpListener {
 
     /**
      * 请求头信息
+     *
      * @param headerMap
      */
     void addHttpHeader(Map<String, String> headerMap);

@@ -5,5 +5,4 @@ import velly.Interface.IHttpListener;
 public interface IDownListener extends IHttpListener {
 
 
-
 }

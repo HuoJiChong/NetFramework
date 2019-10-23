@@ -23,9 +23,9 @@ public class FileDownHttpService implements IHttpService {
     private final static String TAG = FileDownHttpService.class.getName();
 
     /**
-     *即将添加到请求头的信息 ,使用同步的Map
+     * 即将添加到请求头的信息 ,使用同步的Map
      */
-    private Map<String,String> headerMap = Collections.synchronizedMap(new HashMap<String,String>());
+    private Map<String, String> headerMap = Collections.synchronizedMap(new HashMap<String, String>());
 
     private String Url;
     private IHttpListener httpListener;
@@ -53,7 +53,7 @@ public class FileDownHttpService implements IHttpService {
         httpGet = new HttpGet(Url);
         constrcutHeader();
         try {
-            httpClient.execute(httpGet,responseHandler);
+            httpClient.execute(httpGet, responseHandler);
         } catch (IOException e) {
             e.printStackTrace();
             httpListener.onFail();
@@ -61,12 +61,11 @@ public class FileDownHttpService implements IHttpService {
     }
 
     private void constrcutHeader() {
-        Iterator iterator=headerMap.keySet().iterator();
-        while (iterator.hasNext())
-        {
-            String key= (String) iterator.next();
-            String value=headerMap.get(key);
-            httpGet.addHeader(key,value);
+        Iterator iterator = headerMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            String value = headerMap.get(key);
+            httpGet.addHeader(key, value);
         }
     }
 
@@ -81,7 +80,7 @@ public class FileDownHttpService implements IHttpService {
 
     @Override
     public void pause() {
-        pause.compareAndSet(false,true);
+        pause.compareAndSet(false, true);
     }
 
     @Override
@@ -99,16 +98,16 @@ public class FileDownHttpService implements IHttpService {
         return pause.get();
     }
 
-    private class DownloadResponseHandler extends BasicResponseHandler{
+    private class DownloadResponseHandler extends BasicResponseHandler {
         @Override
         public String handleResponse(HttpResponse response) {
             int code = response.getStatusLine().getStatusCode();
-            if (code == 200){
+            if (code == 200) {
                 httpListener.onSuccess(response.getEntity());
-            }else{
+            } else {
                 httpListener.onFail();
             }
-            Log.e("derek","handleResponse" + code);
+            Log.e("derek", "handleResponse" + code);
             return null;
         }
     }

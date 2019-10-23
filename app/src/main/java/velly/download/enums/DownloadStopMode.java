@@ -15,9 +15,10 @@ public enum DownloadStopMode {
      */
     hand(1);
 
-    DownloadStopMode(Integer value){
+    DownloadStopMode(Integer value) {
         this.value = value;
     }
+
     private Integer value;
 
     public Integer getValue() {
@@ -28,9 +29,9 @@ public enum DownloadStopMode {
         this.value = value;
     }
 
-    public static DownloadStopMode getInstance(int value){
-        for (DownloadStopMode mode: DownloadStopMode.values()){
-            if (mode.getValue() == value){
+    public static DownloadStopMode getInstance(int value) {
+        for (DownloadStopMode mode : DownloadStopMode.values()) {
+            if (mode.getValue() == value) {
                 return mode;
             }
         }

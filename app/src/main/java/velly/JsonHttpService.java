@@ -41,7 +41,7 @@ public class JsonHttpService implements IHttpService {
         httpPost.setEntity(byteArrayEntity);
 
         try {
-            httpClient.execute(httpPost,responseHandler);
+            httpClient.execute(httpPost, responseHandler);
         } catch (IOException e) {
             httpListener.onFail();
             e.printStackTrace();
@@ -79,13 +79,13 @@ public class JsonHttpService implements IHttpService {
         return false;
     }
 
-    private class HttpRespnceHandler extends BasicResponseHandler{
+    private class HttpRespnceHandler extends BasicResponseHandler {
         @Override
         public String handleResponse(HttpResponse response) {
             int returnCode = response.getStatusLine().getStatusCode();
-            if (returnCode == 200 ){
+            if (returnCode == 200) {
                 httpListener.onSuccess(response.getEntity());
-            }else{
+            } else {
                 httpListener.onFail();
             }
             return null;

@@ -9,11 +9,12 @@ import java.io.Serializable;
 
 /**
  * 通过序列化实现深拷贝
+ *
  * @param <T>
  */
 public class BaseEntity<T> implements Serializable {
 
-    public T copy(){
+    public T copy() {
         ByteArrayOutputStream byteArrayOutputStream = null;
         ObjectOutputStream objectOutputStream = null;
 
@@ -25,14 +26,14 @@ public class BaseEntity<T> implements Serializable {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
             Object result = objectInputStream.readObject();
-            return (T)result;
+            return (T) result;
 
         } catch (IOException io) {
             io.printStackTrace();
-        }catch (ClassNotFoundException classNot){
+        } catch (ClassNotFoundException classNot) {
             classNot.printStackTrace();
-        }finally {
-            if (byteArrayOutputStream != null){
+        } finally {
+            if (byteArrayOutputStream != null) {
                 try {
                     byteArrayOutputStream.close();
                 } catch (IOException e) {
@@ -40,7 +41,7 @@ public class BaseEntity<T> implements Serializable {
                 }
             }
 
-            if (objectOutputStream!= null){
+            if (objectOutputStream != null) {
                 try {
                     objectOutputStream.close();
                 } catch (IOException e) {
@@ -49,6 +50,6 @@ public class BaseEntity<T> implements Serializable {
             }
         }
 
-        return  null;
+        return null;
     }
 }

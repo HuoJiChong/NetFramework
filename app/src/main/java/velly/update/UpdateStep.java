@@ -29,15 +29,13 @@ public class UpdateStep {
 
     // ==================================================
 
-    public UpdateStep(Element ele)
-    {
+    public UpdateStep(Element ele) {
         versionFrom = ele.getAttribute("versionFrom");
         versionTo = ele.getAttribute("versionTo");
         updateDbs = new ArrayList<UpdateDb>();
 
         NodeList dbs = ele.getElementsByTagName("updateDb");
-        for (int i = 0; i < dbs.getLength(); i++)
-        {
+        for (int i = 0; i < dbs.getLength(); i++) {
             Element db = (Element) (dbs.item(i));
             UpdateDb updateDb = new UpdateDb(db);
             this.updateDbs.add(updateDb);

@@ -21,7 +21,7 @@ public class CreateDb {
         {
             sqlCreates = new ArrayList<>();
             NodeList sqls = ele.getElementsByTagName("sql_createTable");
-            for (int i = 0;i<sqls.getLength();i++){
+            for (int i = 0; i < sqls.getLength(); i++) {
                 String sqlCreate = sqls.item(i).getTextContent();
                 this.sqlCreates.add(sqlCreate);
             }

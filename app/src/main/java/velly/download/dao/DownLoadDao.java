@@ -19,8 +19,8 @@ import velly.download.enums.DownloadStatus;
  */
 public class DownLoadDao extends BaseDao<DownloadItemInfo> {
     /**
-     *  保存应该下载的合集，但不包括已经下载成功的
-      */
+     * 保存应该下载的合集，但不包括已经下载成功的
+     */
     private List<DownloadItemInfo> downloadItemInfos =
             Collections.synchronizedList(new ArrayList<DownloadItemInfo>());
 
@@ -53,14 +53,15 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
 
     /**
      * 根据下载地址和下载文件路径查找下载记录
-     * @param url 下载地址
+     *
+     * @param url      下载地址
      * @param filePath 下载文件路径
      * @return 记录
      */
-    public DownloadItemInfo findRecord(String url, String filePath){
-        synchronized (DownLoadDao.class){
-            for (DownloadItemInfo record : downloadItemInfos){
-                if (record.getUrl().equals(url) && record.getFilePath().equals(filePath)){
+    public DownloadItemInfo findRecord(String url, String filePath) {
+        synchronized (DownLoadDao.class) {
+            for (DownloadItemInfo record : downloadItemInfos) {
+                if (record.getUrl().equals(url) && record.getFilePath().equals(filePath)) {
                     return record;
                 }
             }
@@ -71,7 +72,7 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
             where.setUrl(url);
             where.setFilePath(filePath);
             List<DownloadItemInfo> resultList = super.query(where);
-            if (resultList.size() > 0){
+            if (resultList.size() > 0) {
                 return resultList.get(0);
             }
             return null;
@@ -80,11 +81,12 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
 
     /**
      * 根据文件路径查找记录
+     *
      * @param filePath 文件路径
      * @return 记录
      */
-    public List<DownloadItemInfo> findRecord(String filePath){
-        synchronized (DownLoadDao.class){
+    public List<DownloadItemInfo> findRecord(String filePath) {
+        synchronized (DownLoadDao.class) {
             DownloadItemInfo where = new DownloadItemInfo();
             where.setFilePath(filePath);
             List<DownloadItemInfo> resultList = super.query(where);
@@ -94,16 +96,17 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
 
     /**
      * 添加下载记录
-     * @param url 下载地址
-     * @param filePath 下载文件路径
+     *
+     * @param url         下载地址
+     * @param filePath    下载文件路径
      * @param displayName 文件显示名
-     * @param priority 下载优先级
+     * @param priority    下载优先级
      * @return 下载ID，失败时返回-1，成功时返回正数
      */
-    public Integer addRecord(String url,String filePath,String displayName,int priority){
-        synchronized (DownLoadDao.class){
-            DownloadItemInfo exitDownloadInfo = findRecord(url,filePath);
-            if (exitDownloadInfo == null){
+    public Integer addRecord(String url, String filePath, String displayName, int priority) {
+        synchronized (DownLoadDao.class) {
+            DownloadItemInfo exitDownloadInfo = findRecord(url, filePath);
+            if (exitDownloadInfo == null) {
                 DownloadItemInfo record = new DownloadItemInfo();
                 record.setId(generateRecordId());
                 record.setUrl(url);
@@ -114,7 +117,7 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
                 record.setTotalLen(0L);
                 record.setCurrentLen(0L);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                record.setStartTime(dateFormat.format(new Date()) );
+                record.setStartTime(dateFormat.format(new Date()));
                 record.setFinishTime("0");
                 super.insert(record);
                 downloadItemInfos.add(record);
@@ -127,16 +130,17 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
 
     /**
      * 生成ID
+     *
      * @return 返回下载的id
      */
     private Integer generateRecordId() {
         int maxId = 0;
         String sql = "select max(id) from " + getTableName();
-        synchronized (DownLoadDao.class){
-            Cursor cursor = this.database.rawQuery(sql,null);
-            if (cursor.moveToNext()){
+        synchronized (DownLoadDao.class) {
+            Cursor cursor = this.database.rawQuery(sql, null);
+            if (cursor.moveToNext()) {
                 int index = cursor.getColumnIndex("max(id)");
-                if (index != -1){
+                if (index != -1) {
                     Object value = cursor.getInt(index);
                     maxId = Integer.parseInt(String.valueOf(value));
                 }
@@ -147,6 +151,7 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
 
     /**
      * 更新下载记录
+     *
      * @param record 记录
      * @return 更新结果
      */
@@ -154,18 +159,18 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
         DownloadItemInfo where = new DownloadItemInfo();
         where.setId(record.getId());
         int result = 0;
-        synchronized (DownLoadDao.class){
-            try{
+        synchronized (DownLoadDao.class) {
+            try {
                 // 更新数据库中的数据
-                result = super.update(record,where);
-            }catch (Exception e){
+                result = super.update(record, where);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (result > 0){
+            if (result > 0) {
                 // 更新内存中的数据
-                for (int i = 0;i<downloadItemInfos.size();i++){
-                    if (downloadItemInfos.get(i).getId().intValue() == record.getId()){
-                        downloadItemInfos.set(i,record);
+                for (int i = 0; i < downloadItemInfos.size(); i++) {
+                    if (downloadItemInfos.get(i).getId().intValue() == record.getId()) {
+                        downloadItemInfos.set(i, record);
                         break;
                     }
                 }
@@ -179,10 +184,10 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
      * @return 移除结果
      */
     public boolean removeRecordFromMemery(int downId) {
-        synchronized (DownLoadDao.class){
+        synchronized (DownLoadDao.class) {
             boolean result = false;
-            for (int i = 0;i<downloadItemInfos.size();i++){
-                if (downloadItemInfos.get(i).getId() == downId){
+            for (int i = 0; i < downloadItemInfos.size(); i++) {
+                if (downloadItemInfos.get(i).getId() == downId) {
                     downloadItemInfos.remove(i);
                     result = true;
                     break;
@@ -194,13 +199,14 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
     }
 
     /**
-     *  查找下载记录
+     * 查找下载记录
+     *
      * @param filePath
      * @return
      */
     public DownloadItemInfo findSigleRecord(String filePath) {
         List<DownloadItemInfo> downloadInfoList = findRecord(filePath);
-        if (downloadInfoList.isEmpty()){
+        if (downloadInfoList.isEmpty()) {
             return null;
         }
         return downloadInfoList.get(0);
@@ -212,14 +218,10 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
      * @param recordId
      * @return
      */
-    public DownloadItemInfo findRecordById(int recordId)
-    {
-        synchronized (DownLoadDao.class)
-        {
-            for (DownloadItemInfo record :downloadItemInfos)
-            {
-                if (record.getId() == recordId)
-                {
+    public DownloadItemInfo findRecordById(int recordId) {
+        synchronized (DownLoadDao.class) {
+            for (DownloadItemInfo record : downloadItemInfos) {
+                if (record.getId() == recordId) {
                     return record;
                 }
             }
@@ -227,8 +229,7 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
             DownloadItemInfo where = new DownloadItemInfo();
             where.setId(recordId);
             List<DownloadItemInfo> resultList = super.query(where);
-            if (resultList.size() > 0)
-            {
+            if (resultList.size() > 0) {
                 return resultList.get(0);
             }
             return null;
@@ -237,9 +238,9 @@ public class DownLoadDao extends BaseDao<DownloadItemInfo> {
     }
 
     /**
-     *比较器
+     * 比较器
      */
-    class DownloadInfoComparator implements Comparator<DownloadItemInfo>{
+    class DownloadInfoComparator implements Comparator<DownloadItemInfo> {
 
         @Override
         public int compare(DownloadItemInfo lhs, DownloadItemInfo rhs) {

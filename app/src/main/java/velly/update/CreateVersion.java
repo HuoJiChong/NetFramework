@@ -21,10 +21,11 @@ public class CreateVersion {
     }
 
     public CreateVersion(Element ele) {
-        version = ele.getAttribute("version");{
+        version = ele.getAttribute("version");
+        {
             createDbs = new ArrayList<>();
             NodeList cs = ele.getElementsByTagName("createDb");
-            for (int i = 0;i<cs.getLength();i++){
+            for (int i = 0; i < cs.getLength(); i++) {
                 Element ci = (Element) cs.item(i);
                 CreateDb cd = new CreateDb(ci);
                 this.createDbs.add(cd);

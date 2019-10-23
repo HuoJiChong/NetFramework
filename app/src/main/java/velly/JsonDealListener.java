@@ -44,7 +44,7 @@ public class JsonDealListener<M> implements IHttpListener {
             });
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             FileUtil.closeQuietly(is);
         }
     }
@@ -63,7 +63,7 @@ public class JsonDealListener<M> implements IHttpListener {
                 dataListener.onFail();
                 System.out.println("Error=" + e.toString());
             } finally {
-               FileUtil.closeQuietly(inputStream);
+                FileUtil.closeQuietly(inputStream);
             }
             return sb.toString();
         } catch (Exception e) {

@@ -3,17 +3,21 @@ package com.derek.client.http;
 public class LoginResponse {
     private int code;
     private String user_id;
-    private String  time;
+    private String time;
     private String name;
+
     public int getCode() {
         return code;
     }
+
     public void setCode(int code) {
         this.code = code;
     }
+
     public String getUser_id() {
         return user_id;
     }
+
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }

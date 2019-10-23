@@ -26,7 +26,7 @@ public class DownLoadListener implements IDownListener {
     private IDownloadServiceCallable downloadServiceCallable;
     private IHttpService httpService;
 
-    private Handler handler=new Handler(Looper.getMainLooper());
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public DownLoadListener(DownloadItemInfo downloadItemInfo, IDownloadServiceCallable downloadServiceCallable, IHttpService httpService) {
         this.downloadItemInfo = downloadItemInfo;
@@ -79,7 +79,7 @@ public class DownLoadListener implements IDownListener {
 
         try {
             if (!makeDir(this.getFile().getParentFile())) {
-                downloadServiceCallable.onDownloadError(downloadItemInfo,1,"创建文件夹失败");
+                downloadServiceCallable.onDownloadError(downloadItemInfo, 1, "创建文件夹失败");
             } else {
                 fos = new FileOutputStream(this.getFile(), true);
                 bos = new BufferedOutputStream(fos);
@@ -147,23 +147,25 @@ public class DownLoadListener implements IDownListener {
 
     /**
      * 创建文件夹的操作
+     *
      * @param parentFile 文件目录
      * @return
      */
     private boolean makeDir(File parentFile) {
-        return parentFile.exists()&&!parentFile.isFile()
-                ?parentFile.exists()&&parentFile.isDirectory():
+        return parentFile.exists() && !parentFile.isFile()
+                ? parentFile.exists() && parentFile.isDirectory() :
                 parentFile.mkdirs();
     }
 
     /**
      * 得到的文件总长度
+     *
      * @param totalLength 长度
      */
     private void receviceTotalLength(long totalLength) {
         downloadItemInfo.setCurrentLen(totalLength);
         final DownloadItemInfo itemInfo = downloadItemInfo.copy();
-        if (downloadServiceCallable!=null){
+        if (downloadServiceCallable != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -175,19 +177,20 @@ public class DownLoadListener implements IDownListener {
 
     /**
      * 下载长度变化
-     * @param downlength 已经下载的文件长度
+     *
+     * @param downlength  已经下载的文件长度
      * @param totalLength 文件总长度
-     * @param speed 下载速度
+     * @param speed       下载速度
      */
-    private void downloadLengthChange(final long downlength, final long totalLength, final long speed){
+    private void downloadLengthChange(final long downlength, final long totalLength, final long speed) {
         downloadItemInfo.setCurrentLen(downlength);
 
-        if (downloadServiceCallable!=null){
+        if (downloadServiceCallable != null) {
             final DownloadItemInfo itemInfo = downloadItemInfo.copy();
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    downloadServiceCallable.onCurrentSizeChanged(itemInfo,downlength/totalLength,speed);
+                    downloadServiceCallable.onCurrentSizeChanged(itemInfo, downlength / totalLength, speed);
                 }
             });
         }
@@ -195,15 +198,14 @@ public class DownLoadListener implements IDownListener {
 
     /**
      * 更改下载时的状态
+     *
      * @param downloading
      */
     private void downloadStatusChange(DownloadStatus downloading) {
         downloadItemInfo.setStatus(downloading.getValue());
-        final DownloadItemInfo copyDownloadItemInfo=downloadItemInfo.copy();
-        if(downloadServiceCallable!=null)
-        {
-            synchronized (this.downloadServiceCallable)
-            {
+        final DownloadItemInfo copyDownloadItemInfo = downloadItemInfo.copy();
+        if (downloadServiceCallable != null) {
+            synchronized (this.downloadServiceCallable) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

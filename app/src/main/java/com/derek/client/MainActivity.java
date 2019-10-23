@@ -17,14 +17,13 @@ import com.derek.client.http.UserRequest;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import velly.Interface.IDataListener;
 import velly.Velly;
 import velly.db.DaoFactory;
 import velly.download.DownFileManager;
 import velly.update.UpdateManager;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,27 +33,27 @@ public class MainActivity extends AppCompatActivity {
 
     UpdateManager updateManager;
     UserDao baseDao;
-    int i = 0;
+    int insertIndex = 0;
+    int loginIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("derek","onCreate");
+        Log.e("derek", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         requestPer();
         updateManager = new UpdateManager();
-        baseDao = DaoFactory.getInstance().getDataHelper(UserDao.class,User.class);
+        baseDao = DaoFactory.getInstance().getDataHelper(UserDao.class, User.class);
 
         Locale locale = Locale.US;
         String str = "%s:%s:%s:%d:%d:%d";
         Object[] objArr = new Object[6];
+
         objArr[0] = 1;
         objArr[1] = 2;
         objArr[2] = 3;
-
         objArr[3] = 4;
-
         objArr[4] = 5;
         objArr[5] = 6;
 
@@ -64,63 +63,71 @@ public class MainActivity extends AppCompatActivity {
     private void requestPer() {
         String[] persm = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(persm[0]) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(persm,200);
+            if (checkSelfPermission(persm[0]) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(persm, 200);
             }
         }
     }
 
-    public void onClickRequest(View v){
-        for (int i = 0;i<10;i++){
-            UserRequest user = new UserRequest("derek","123");
-            Velly.sendRequest(user, RequestURl,LoginResponse.class,new IDataListener<LoginResponse>(){
+    public void onClickRequest(View v) {
+        for (int i = 0; i < 10; i++) {
+            UserRequest user = new UserRequest("derek", "123");
+            Velly.sendRequest(user, RequestURl, LoginResponse.class, new IDataListener<LoginResponse>() {
 
                 @Override
                 public void onSuccess(LoginResponse loginResponse) {
-                    Log.i(TAG,loginResponse.toString());
+                    Log.i(TAG, loginResponse.toString());
                 }
 
                 @Override
                 public void onFail() {
-                    Log.i(TAG,"失败");
+                    Log.i(TAG, "失败");
                 }
             });
         }
     }
 
-    public void onClickDownload(View v){
+    public void onClickDownload(View v) {
         DownFileManager manager = new DownFileManager();
         manager.download(DownloadURl);
     }
 
+    public void insertUser(View v) {
+        User user = new User();
+        user.setPassword("123456");
+        user.setName("张三" + (++insertIndex));
+        user.setUser_Id("N000" + insertIndex);
+        baseDao.insert(user);
+    }
+
     /**
      * 数据库分库，实现多用户登录
+     *
      * @param v view
      */
-    public void login(View v){
-        User user=new User();
-        user.setName("V00"+(i++));
+    public void login(View v) {
+        User user = new User();
         user.setPassword("123456");
-        user.setName("张三"+i);
-        user.setUser_Id("N000"+i);
-        baseDao.insert(user);
+        user.setName("张三" + (++loginIndex));
+        user.setUser_Id("N000" + loginIndex);
+        baseDao.setCurrentUser(user);
 //        updateManager.checkThisVersionTable(getApplicationContext());
     }
 
-    public void insert(View v){
-        Photo photo=new Photo();
+    public void insert(View v) {
+        Photo photo = new Photo();
         photo.setPath("data/data/my.jpg");
         java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         photo.setTime(dateFormat.format(new Date()));
-        PhotoDao photoDao = DaoFactory.getInstance().getUserHelper(PhotoDao.class,Photo.class);
+        PhotoDao photoDao = DaoFactory.getInstance().getUserHelper(PhotoDao.class, Photo.class);
         photoDao.insert(photo);
     }
 
-    public void write(View v){
-        updateManager.saveVersionInfo(getApplicationContext(),"V002");
+    public void write(View v) {
+        updateManager.saveVersionInfo(getApplicationContext(), "V002");
     }
 
-    public void update(View v){
+    public void update(View v) {
         updateManager.checkThisVersionTable(getApplicationContext());
 
         updateManager.startUpdateDb(getApplicationContext());
@@ -134,8 +141,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        DaoFactory.getInstance().onStop();
-        Log.e("derek","onStop");
+        Log.e("derek", "onStop");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DaoFactory.getInstance().onDestroy();
+    }
 }

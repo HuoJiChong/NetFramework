@@ -25,15 +25,12 @@ public enum PrivateDataBaseEnums {
     }
 
     public String getValue() {
-        UserDao userDao = DaoFactory.getInstance().getDataHelper(UserDao.class,User.class);
-        if(userDao!=null)
-        {
-            User currentUser=userDao.getCurrentUser();
-            if(currentUser!=null)
-            {
-                File file=new File(Environment.getExternalStorageDirectory(),"update/" + currentUser.getUser_Id());
-                if(!file.exists())
-                {
+        UserDao userDao = DaoFactory.getInstance().getDataHelper(UserDao.class, User.class);
+        if (userDao != null) {
+            User currentUser = userDao.getCurrentUser();
+            if (currentUser != null) {
+                File file = new File(Environment.getExternalStorageDirectory(), "update/" + currentUser.getUser_Id());
+                if (!file.exists()) {
                     file.mkdirs();
                 }
                 return file.getAbsolutePath() + "/logic.db";

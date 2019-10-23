@@ -49,6 +49,7 @@ public class UpdateDbXml {
 
     /**
      * 获取各个升级版本
+     *
      * @return
      */
     public List<CreateVersion> getCreateVersions() {
@@ -57,12 +58,12 @@ public class UpdateDbXml {
 
     /**
      * 获取各个升级步骤
+     *
      * @return
      */
     public List<UpdateStep> getUpdateSteps() {
         return updateSteps;
     }
-
 
 
 }

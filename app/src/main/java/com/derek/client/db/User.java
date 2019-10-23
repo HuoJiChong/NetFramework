@@ -16,7 +16,7 @@ public class User {
     private String password;
 
     @DbFiled("status")
-    private  Integer status;
+    private Integer status;
 
     public User() {
     }
@@ -55,10 +55,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "BeanUser{" +
-                "user_Id=" + user_id +
+        return "User{" +
+                "user_id='" + user_id + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", status=" + status +
                 '}';
     }
 }
