@@ -73,6 +73,7 @@ public class DaoFactory {
         try {
             baseDao = clazz.newInstance();
             baseDao.init(entity, userDatabase);
+            //    切换用户，会把之前用户的 baseDao覆盖掉
             map.put(clazz.getSimpleName(), baseDao);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -89,6 +90,5 @@ public class DaoFactory {
             db.onClose();
         }
         map.clear();
-
     }
 }
